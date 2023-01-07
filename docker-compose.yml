@@ -26,7 +26,7 @@ services:
 
     networks:
       default:
-      mariadb_nextcloud:
+      outband:
 
   mariadb:
     image: mariadb:10.10.2@sha256:a681349fc17a7b1a506e938347dff725e3298b590dd78f7d1dcb48e5830000d0
@@ -51,7 +51,22 @@ services:
           memory: 512m
 
     networks:
-      mariadb_nextcloud:
+      default:
+
+  nginx:
+    image: nginx:1.23.3@sha256:9a821cadb1b13cb782ec66445325045b2213459008a41c72d8d87cde94b33c8c
+    hostname: nginx
+    container_name: nextcloud__nginx
+    restart: unless-stopped
+
+    volumes:
+      - type: bind
+        source: ./nginx.conf
+        target: /etc/nginx/nginx.conf
+        read_only: true
+
+    networks:
+      default:
 
   cloudflared:
     image: cloudflare/cloudflared:2022.12.1-amd64@sha256:7899243ca86bd6cdd4eaef330cd58f8abbf364a1d1ba9bee2087a21b9d1e825d
@@ -73,6 +88,7 @@ services:
 
     networks:
       default:
+      outband:
       prometheus__cloudflared:
         aliases:
           - nextcloud__cloudflared
@@ -84,10 +100,10 @@ networks:
 
   default:
     name: nextcloud__default
-
-  mariadb_nextcloud:
-    name: nextcloud__mariadb_nextcloud
     internal: true
+
+  outband:
+    name: nextcloud__outband
 
 volumes:
   nextcloud_data:
