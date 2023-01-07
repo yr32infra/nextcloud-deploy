@@ -1,0 +1,97 @@
+version: '3.8'
+
+services:
+  nextcloud:
+    image: nextcloud:stable@sha256:13a8d75f2cb73af0f67811270763807d61fc4cb4426c83e5be139143e7508ede
+    hostname: nextcloud
+    container_name: nextcloud__nextcloud
+    restart: unless-stopped
+
+    environment:
+      MYSQL_DATABASE: nextcloud
+      MYSQL_USER: nextcloud
+      MYSQL_PASSWORD: nextcloud
+      MYSQL_HOST: mariadb
+      OVERWRITEPROTOCOL: "https"
+
+    volumes:
+      - type: volume
+        source: nextcloud_data
+        target: /var/www/html
+
+    deploy:
+      resources:
+        limits:
+          memory: 1024m
+
+    networks:
+      default:
+      mariadb_nextcloud:
+
+  mariadb:
+    image: mariadb:10.10.2@sha256:a681349fc17a7b1a506e938347dff725e3298b590dd78f7d1dcb48e5830000d0
+    hostname: mariadb
+    container_name: nextcloud__mariadb
+    restart: unless-stopped
+
+    environment:
+      MYSQL_ROOT_PASSWORD: nextcloud
+      MYSQL_USER: nextcloud
+      MYSQL_PASSWORD: nextcloud
+      MYSQL_DATABASE: nextcloud
+
+    volumes:
+      - type: volume
+        source: mariadb_data
+        target: /var/lib/mysql
+
+    deploy:
+      resources:
+        limits:
+          memory: 512m
+
+    networks:
+      mariadb_nextcloud:
+
+  cloudflared:
+    image: cloudflare/cloudflared:2022.12.1-amd64@sha256:7899243ca86bd6cdd4eaef330cd58f8abbf364a1d1ba9bee2087a21b9d1e825d
+    hostname: cloudflared
+    container_name: nextcloud__cloudflared
+    restart: unless-stopped
+
+    environment:
+      TUNNEL_METRICS: 0.0.0.0:9126
+      TUNNEL_LOGFILE: /dev/stdout
+
+    command: tunnel run --token ${TUNNEL_TOKEN}
+    user: root
+
+    deploy:
+      resources:
+        limits:
+          memory: 128m
+
+    networks:
+      default:
+      prometheus__cloudflared:
+        aliases:
+          - nextcloud__cloudflared
+
+networks:
+  prometheus__cloudflared:
+    name: prometheus__cloudflared
+    external: true
+
+  default:
+    name: nextcloud__default
+
+  mariadb_nextcloud:
+    name: nextcloud__mariadb_nextcloud
+    internal: true
+
+volumes:
+  nextcloud_data:
+    name: nextcloud__nextcloud_data
+
+  mariadb_data:
+    name: nextcloud__mariadb_data
