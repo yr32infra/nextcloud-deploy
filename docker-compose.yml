@@ -69,7 +69,7 @@ services:
       default:
 
   cloudflared:
-    image: cloudflare/cloudflared:2023.1.0-amd64@sha256:11101e453ddcd33b7c2175de701c3d29c11b401fe14b74e6c8f371d65fe7558a
+    image: cloudflare/cloudflared:2023.3.1-amd64@sha256:ae2c36ad416f0eb37cc85890724dec96983a31a9f16899a9a36de695e516236e
     hostname: cloudflared
     container_name: nextcloud__cloudflared
     restart: unless-stopped
