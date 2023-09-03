@@ -29,7 +29,7 @@ services:
       outband:
 
   mariadb:
-    image: mariadb:10.10.2@sha256:569cda3a16fbd0235d20a0f895c9a906e022a75eeeb836da6c29f9a542cccf75
+    image: mariadb:10.10.2@sha256:bfc25a68e113de43d0d112f5a7126df8e278579c3224e3923359e1c1d8d5ce6e
     hostname: mariadb
     container_name: nextcloud__mariadb
     restart: unless-stopped
