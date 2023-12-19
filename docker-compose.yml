@@ -54,7 +54,7 @@ services:
       default:
 
   nginx:
-    image: nginx:1.25.3@sha256:add4792d930c25dd2abf2ef9ea79de578097a1c175a16ab25814332fe33622de
+    image: nginx:1.25.3@sha256:5040a25cc87f100efc43c5c8c2f504c76035441344345c86d435c693758874b7
     hostname: nginx
     container_name: nextcloud__nginx
     restart: unless-stopped
