@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   nextcloud:
-    image: nextcloud:stable@sha256:62ba22cbf03aeb7487324490dc79c3f2cbfc806571e2826c4230e0c3d9989cef
+    image: nextcloud:stable@sha256:ad4da6574b6dcb75c185128b091e6ac613f0aabda7ce7f75c9730d9f706e37d0
     hostname: nextcloud
     container_name: nextcloud__nextcloud
     restart: unless-stopped
